@@ -30,6 +30,8 @@ Build and run:
 ```bash
 docker build -t dashed .
 docker run -d -p 3000:3000 -v $(pwd)/data:/app/data --name dashed dashed
+# OR
+docker run -d -p 3000:3000 -v $(pwd)/data:/app/data --name dashed ghcr.io/wazeerc/dashed:latest
 ```
 
 ### Local Development
