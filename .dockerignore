@@ -1,0 +1,11 @@
+.git
+.gitignore
+*.md
+README.md
+LICENSE
+.dockerignore
+.vscode
+.idea
+node_modules
+data
+npm-debug.log
