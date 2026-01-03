@@ -41,7 +41,7 @@ Access at: `http://localhost:3000`
 
 ## Usage
 
-1. Click the ➕button to add a new service
+1. Click the ➕ button to add a new service
 2. Fill in:
    - **Name**: Service name (e.g., "Portainer")
    - **Category**: Optional category (e.g., "Container Management")
