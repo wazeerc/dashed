@@ -2,6 +2,8 @@
 
 A minimal, resource-efficient home server dashboard with persistent JSON storage.
 
+![dashed](https://github.com/user-attachments/assets/6e8c45a1-a61b-4f5b-8d2e-990817203a04)
+
 ## Features
 
 - **Ultra Lightweight**: ~45MB Docker image (node:alpine)
