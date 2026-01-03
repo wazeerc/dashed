@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+  <title>Dashed - Home Server Dashboard</title>
+  <link rel="stylesheet"
+        href="css/styles.css">
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <h1>Dashed</h1>
+    </div>
+    <div class="header-right">
+      <div id="date-time">
+        <div id="date"></div>
+        <div id="time"></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="cards-container"
+         id="cards-container">
+    </div>
+
+    <button class="add-btn"
+            id="add-btn"
+            aria-label="Add new service">➕</button>
+  </main>
+
+  <div class="modal"
+       id="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Add Service</h2>
+        <button class="close-btn"
+                id="close-btn">❌</button>
+      </div>
+      <form id="card-form">
+        <div class="form-group">
+          <label for="service-name">Name</label>
+          <input type="text"
+                 id="service-name"
+                 required
+                 placeholder="e.g., Portainer">
+        </div>
+
+        <div class="form-group">
+          <label for="service-category">Category</label>
+          <input type="text"
+                 id="service-category"
+                 placeholder="e.g., Container Management">
+        </div>
+
+        <div class="form-group">
+          <label for="service-url">URL/IP Address</label>
+          <input type="text"
+                 id="service-url"
+                 required
+                 placeholder="e.g., http://192.168.1.100:9000">
+        </div>
+
+        <div class="form-group">
+          <label for="service-icon">Icon</label>
+          <input type="text"
+                 id="service-icon"
+                 maxlength="2"
+                 placeholder="e.g., 🐳">
+        </div>
+
+        <div class="form-actions">
+          <button type="button"
+                  class="btn-cancel"
+                  id="cancel-btn">Cancel</button>
+          <button type="submit"
+                  class="btn-submit">Add Service</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
