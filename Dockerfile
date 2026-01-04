@@ -1,7 +1,8 @@
-FROM node:20-bookworm-slim AS build
+FROM --platform=$BUILDPLATFORM node:20-bookworm-slim AS build
 
 WORKDIR /app
 ENV NODE_ENV=production
+ARG TARGETPLATFORM
 
 COPY package*.json ./
 
@@ -11,7 +12,7 @@ RUN npm ci --omit=dev --ignore-scripts --no-audit --no-fund \
 COPY server.js ./
 COPY public ./public
 
-FROM gcr.io/distroless/nodejs20-debian12 AS runtime
+FROM --platform=$TARGETPLATFORM gcr.io/distroless/nodejs20-debian12 AS runtime
 
 WORKDIR /app
 ENV NODE_ENV=production
