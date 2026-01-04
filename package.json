@@ -1,6 +1,6 @@
 {
   "name": "dashed",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Lightweight home server dashboard",
   "main": "server.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "home-server",
     "lightweight"
   ],
-  "author": "",
+  "author": "wazeerc",
   "license": "MIT",
   "dependencies": {
     "express": "^5.2.1"

@@ -1,19 +1,29 @@
-FROM node:20-alpine
+FROM node:20-bookworm-slim AS build
 
 WORKDIR /app
+ENV NODE_ENV=production
 
 COPY package*.json ./
 
-RUN npm ci --only=production && npm cache clean --force
+RUN npm ci --omit=dev --ignore-scripts --no-audit --no-fund \
+    && npm cache clean --force
 
 COPY server.js ./
 COPY public ./public
 
-RUN mkdir -p /app/data
+FROM gcr.io/distroless/nodejs20-debian12 AS runtime
+
+WORKDIR /app
+ENV NODE_ENV=production
+
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/server.js ./server.js
+COPY --from=build /app/public ./public
+COPY healthcheck.js ./healthcheck.js
 
 EXPOSE 3000
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --quiet --tries=1 --spider http://localhost:3000/ || exit 1
+    CMD ["/usr/bin/node", "/app/healthcheck.js"]
 
-CMD ["node", "server.js"]
+CMD ["/app/server.js"]
