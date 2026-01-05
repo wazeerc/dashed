@@ -19,7 +19,7 @@ function init() {
 
     setInterval(updateDateTime, 60000);
 
-    addBtn.addEventListener('click', openModal);
+    addBtn.addEventListener('click', () => openModal('add'));
     closeBtn.addEventListener('click', closeModal);
     cancelBtn.addEventListener('click', closeModal);
     modal.addEventListener('click', (e) => {
@@ -71,6 +71,7 @@ function createCard(service) {
         ${service.category ? `<div class="card-category">${escapeHtml(service.category)}</div>` : ''}
         <div class="card-url">${escapeHtml(service.url)}</div>
         <button class="card-delete" data-id="${service.id}" aria-label="Delete service">❌</button>
+        <button class="card-edit" data-id="${service.id}" aria-label="Edit service">✏️</button>
     `;
 
     // Prevent card click when deleting
@@ -81,7 +82,41 @@ function createCard(service) {
         deleteService(service.id);
     });
 
+    // Edit button
+    const editBtn = card.querySelector('.card-edit');
+    editBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        editService(service.id);
+    });
+
     cardsContainer.appendChild(card);
+}
+
+async function editService(id) {
+    // Open in edit mode (don't clear fields)
+    openModal('edit');
+    try {
+        const response = await fetch(`${API_URL}/${id}`);
+        if (response.ok) {
+            const service = await response.json();
+            document.getElementById('service-name').value = service.name;
+            document.getElementById('service-category').value = service.category;
+            document.getElementById('service-url').value = service.url;
+            document.getElementById('service-icon').value = service.icon;
+            // store id for update
+            document.getElementById('service-id').value = service.id;
+            // update UI to reflect edit mode
+            const header = modal.querySelector('.modal-header h2');
+            header.textContent = 'Edit Service';
+            document.querySelector('.btn-submit').textContent = 'Save Changes';
+        } else {
+            alert('Failed to load service details for editing');
+        }
+    } catch (err) {
+        console.error('Failed to load service details:', err);
+        alert('Failed to load service details for editing');
+    }
 }
 
 async function deleteService(id) {
@@ -103,14 +138,27 @@ async function deleteService(id) {
     }
 }
 
-function openModal() {
+function openModal(mode = 'add') {
     modal.classList.add('active');
+    if (mode === 'add') {
+        // reset to add mode
+        cardForm.reset();
+        document.getElementById('service-id').value = '';
+        const header = modal.querySelector('.modal-header h2');
+        header.textContent = 'Add Service';
+        document.querySelector('.btn-submit').textContent = 'Add Service';
+    }
     document.getElementById('service-name').focus();
 }
 
 function closeModal() {
     modal.classList.remove('active');
     cardForm.reset();
+    // ensure we clear edit state
+    document.getElementById('service-id').value = '';
+    const header = modal.querySelector('.modal-header h2');
+    header.textContent = 'Add Service';
+    document.querySelector('.btn-submit').textContent = 'Add Service';
 }
 
 async function handleFormSubmit(e) {
@@ -123,9 +171,14 @@ async function handleFormSubmit(e) {
         icon: document.getElementById('service-icon').value.trim() || '📦'
     };
 
+    // determine if this is an edit
+    const id = document.getElementById('service-id').value;
+    const urlToUse = id ? `${API_URL}/${id}` : API_URL;
+    const method = id ? 'PUT' : 'POST';
+
     try {
-        const response = await fetch(API_URL, {
-            method: 'POST',
+        const response = await fetch(urlToUse, {
+            method,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -136,11 +189,11 @@ async function handleFormSubmit(e) {
             loadCards();
             closeModal();
         } else {
-            alert('Failed to add service');
+            alert(id ? 'Failed to update service' : 'Failed to add service');
         }
     } catch (err) {
-        console.error('Failed to add service:', err);
-        alert('Failed to add service');
+        console.error(id ? 'Failed to update service:' : 'Failed to add service:', err);
+        alert(id ? 'Failed to update service' : 'Failed to add service');
     }
 }
 

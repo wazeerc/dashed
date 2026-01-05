@@ -71,6 +71,50 @@ app.post('/api/services', (req, res) => {
     }
 });
 
+// GET single service
+app.get('/api/services/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const services = readServices();
+    const service = services.find(s => s.id === id);
+
+    if (!service) {
+        return res.status(404).json({ error: 'Service not found' });
+    }
+
+    res.json(service);
+});
+
+// PUT update service
+app.put('/api/services/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const { name, category, url, icon } = req.body;
+
+    if (!name || !url) {
+        return res.status(400).json({ error: 'Name and URL are required' });
+    }
+
+    const services = readServices();
+    const idx = services.findIndex(s => s.id === id);
+
+    if (idx === -1) {
+        return res.status(404).json({ error: 'Service not found' });
+    }
+
+    services[idx] = {
+        ...services[idx],
+        name,
+        category: category || '',
+        url,
+        icon: icon || '📦'
+    };
+
+    if (writeServices(services)) {
+        res.json(services[idx]);
+    } else {
+        res.status(500).json({ error: 'Failed to update service' });
+    }
+});
+
 // DELETE service
 app.delete('/api/services/:id', (req, res) => {
     const id = parseInt(req.params.id);

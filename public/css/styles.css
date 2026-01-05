@@ -128,7 +128,7 @@ main {
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
-  background: var(--destructive);
+  background: transparent;
   color: var(--destructive-foreground);
   border: 2px solid var(--border);
   width: 32px;
@@ -145,7 +145,8 @@ main {
   box-shadow: 2px 2px 0px 0px rgb(0, 0, 0);
 }
 
-.card:hover .card-delete {
+.card:hover .card-delete,
+.card:hover .card-edit {
   opacity: 1;
 }
 
@@ -155,6 +156,37 @@ main {
 }
 
 .card-delete:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px 0px rgb(0, 0, 0);
+}
+
+.card-edit {
+  position: absolute;
+  top: 0.75rem;
+  right: 3.25rem;
+  background: transparent;
+  color: var(--destructive-foreground);
+  border: 2px solid var(--border);
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.1s linear;
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 0px 0px rgb(0, 0, 0);
+}
+
+.card-edit:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px 0px rgb(0, 0, 0);
+}
+
+.card-edit:active {
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 0px 0px rgb(0, 0, 0);
 }
@@ -229,7 +261,7 @@ main {
 }
 
 .close-btn {
-  background: var(--destructive);
+  background: transparent;
   border: 2px solid var(--border);
   color: var(--destructive-foreground);
   font-size: 1.5rem;
