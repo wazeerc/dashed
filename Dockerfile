@@ -23,4 +23,6 @@ COPY server.js ./server.js
 
 EXPOSE 3000
 
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD ["node","-e","require('http').get('http://127.0.0.1:3000/health', res => { if (res.statusCode !== 200) process.exit(1); }).on('error', () => process.exit(1));"]
 CMD ["/app/server.js"]
