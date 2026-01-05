@@ -66,7 +66,9 @@ Access at: `http://localhost:3000`
 ## API Endpoints
 
 - `GET /api/services` - Get all services
+- `GET /api/services/:id` - Get a single service by id
 - `POST /api/services` - Add new service
+- `PUT /api/services/:id` - Update an existing service
 - `DELETE /api/services/:id` - Delete service
 
 ## Data Persistence

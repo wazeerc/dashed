@@ -65,7 +65,7 @@ header {
 }
 
 main {
-  padding: 2rem;
+  padding: 4rem;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -73,7 +73,7 @@ main {
 .cards-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.5rem;
+  gap: 2rem;
   margin-bottom: 2rem;
 }
 
@@ -82,7 +82,7 @@ main {
   border: 3px solid var(--border);
   padding: 1.5rem;
   cursor: pointer;
-  transition: all 0.1s ease;
+  transition: all 0.1s linear;
   position: relative;
   text-decoration: none;
   color: var(--foreground);
@@ -90,13 +90,8 @@ main {
 }
 
 .card:hover {
-  transform: translate(-2px, -2px);
+  transform: translate(-4px, -4px);
   box-shadow: var(--shadow-hover);
-}
-
-.card:active {
-  transform: translate(2px, 2px);
-  box-shadow: 2px 2px 0px 0px rgb(0, 0, 0);
 }
 
 .card-icon {
@@ -133,14 +128,14 @@ main {
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
-  background: var(--destructive);
+  background: transparent;
   color: var(--destructive-foreground);
   border: 2px solid var(--border);
   width: 32px;
   height: 32px;
   cursor: pointer;
   opacity: 0;
-  transition: all 0.1s ease;
+  transition: all 0.1s linear;
   font-size: 1rem;
   font-weight: 900;
   line-height: 1;
@@ -150,7 +145,8 @@ main {
   box-shadow: 2px 2px 0px 0px rgb(0, 0, 0);
 }
 
-.card:hover .card-delete {
+.card:hover .card-delete,
+.card:hover .card-edit {
   opacity: 1;
 }
 
@@ -160,6 +156,37 @@ main {
 }
 
 .card-delete:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px 0px rgb(0, 0, 0);
+}
+
+.card-edit {
+  position: absolute;
+  top: 0.75rem;
+  right: 3.25rem;
+  background: transparent;
+  color: var(--destructive-foreground);
+  border: 2px solid var(--border);
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.1s linear;
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 2px 2px 0px 0px rgb(0, 0, 0);
+}
+
+.card-edit:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0px 0px rgb(0, 0, 0);
+}
+
+.card-edit:active {
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 0px 0px rgb(0, 0, 0);
 }
@@ -177,7 +204,7 @@ main {
   font-weight: 900;
   cursor: pointer;
   box-shadow: var(--shadow);
-  transition: all 0.1s ease;
+  transition: all 0.1s linear;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -234,7 +261,7 @@ main {
 }
 
 .close-btn {
-  background: var(--destructive);
+  background: transparent;
   border: 2px solid var(--border);
   color: var(--destructive-foreground);
   font-size: 1.5rem;
@@ -244,7 +271,7 @@ main {
   padding: 0;
   width: 36px;
   height: 36px;
-  transition: all 0.1s ease;
+  transition: all 0.1s linear;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -283,7 +310,7 @@ main {
   color: var(--foreground);
   font-size: 0.875rem;
   font-weight: 600;
-  transition: all 0.1s ease;
+  transition: all 0.1s linear;
   box-shadow: 3px 3px 0px 0px rgb(0, 0, 0);
 }
 
@@ -311,7 +338,7 @@ main {
   font-size: 0.875rem;
   font-weight: 900;
   cursor: pointer;
-  transition: all 0.1s ease;
+  transition: all 0.1s linear;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   box-shadow: 3px 3px 0px 0px rgb(0, 0, 0);
@@ -348,13 +375,6 @@ main {
 }
 
 @media (max-width: 768px) {
-  header {
-    padding: 1rem;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-  }
-
   .header-left h1 {
     font-size: 1.5rem;
   }

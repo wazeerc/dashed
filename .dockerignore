@@ -9,3 +9,4 @@ LICENSE
 node_modules
 data
 npm-debug.log
+/dist
