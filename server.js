@@ -74,6 +74,11 @@ app.post('/api/services', (req, res) => {
 // GET single service
 app.get('/api/services/:id', (req, res) => {
     const id = parseInt(req.params.id);
+
+    if (isNaN(id)) {
+        return res.status(400).json({ error: 'Invalid service ID' });
+    }
+
     const services = readServices();
     const service = services.find(s => s.id === id);
 
@@ -87,6 +92,11 @@ app.get('/api/services/:id', (req, res) => {
 // PUT update service
 app.put('/api/services/:id', (req, res) => {
     const id = parseInt(req.params.id);
+
+    if (isNaN(id)) {
+        return res.status(400).json({ error: 'Invalid service ID' });
+    }
+
     const { name, category, url, icon } = req.body;
 
     if (!name || !url) {
@@ -118,6 +128,11 @@ app.put('/api/services/:id', (req, res) => {
 // DELETE service
 app.delete('/api/services/:id', (req, res) => {
     const id = parseInt(req.params.id);
+
+    if (isNaN(id)) {
+        return res.status(400).json({ error: 'Invalid service ID' });
+    }
+
     const services = readServices();
     const filtered = services.filter(s => s.id !== id);
 
