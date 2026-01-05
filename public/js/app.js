@@ -94,12 +94,11 @@ function createCard(service) {
 }
 
 async function editService(id) {
-    // Open in edit mode (don't clear fields)
-    openModal('edit');
     try {
         const response = await fetch(`${API_URL}/${id}`);
         if (response.ok) {
             const service = await response.json();
+            openModal('edit');
             document.getElementById('service-name').value = service.name;
             document.getElementById('service-category').value = service.category;
             document.getElementById('service-url').value = service.url;
@@ -140,14 +139,20 @@ async function deleteService(id) {
 
 function openModal(mode = 'add') {
     modal.classList.add('active');
+
+    cardForm.reset();
+    document.getElementById('service-id').value = '';
+
     if (mode === 'add') {
-        // reset to add mode
-        cardForm.reset();
-        document.getElementById('service-id').value = '';
         const header = modal.querySelector('.modal-header h2');
         header.textContent = 'Add Service';
         document.querySelector('.btn-submit').textContent = 'Add Service';
+    } else if (mode === 'edit') {
+        const header = modal.querySelector('.modal-header h2');
+        header.textContent = 'Edit Service';
+        document.querySelector('.btn-submit').textContent = 'Save Changes';
     }
+
     document.getElementById('service-name').focus();
 }
 
