@@ -26,9 +26,5 @@ export default defineConfig({
       algorithm: 'brotli',
       ext: '.br'
     })
-  ],
-  server: {
-    middlewareMode: true,
-    hmr: false
-  }
+  ]
 });
