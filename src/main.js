@@ -1,3 +1,5 @@
+import './styles.css';
+
 // API base URL
 const API_URL = '/api/services';
 
@@ -45,7 +47,7 @@ async function loadCards() {
         cardsContainer.innerHTML = '';
 
         if (services.length === 0) {
-            cardsContainer.innerHTML = '<p style="color: var(--text-dim); text-align: center; width: 100%; padding: 2rem;">No services added yet.</p>';
+            cardsContainer.innerHTML = '<p style="color: var(--text-dim); font-size: 0.8rem; text-align: center; width: 100%; padding: 2rem;">No services added yet.</p>';
             return;
         }
 

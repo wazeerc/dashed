@@ -1,30 +1,28 @@
-FROM --platform=$BUILDPLATFORM node:20-bookworm-slim AS build
+FROM node:20-bookworm-slim AS build
 
 WORKDIR /app
-ENV NODE_ENV=production
 ARG TARGETPLATFORM
 
 COPY package*.json ./
 
-RUN npm ci --omit=dev --ignore-scripts --no-audit --no-fund \
+RUN npm ci --ignore-scripts --no-audit --no-fund \
     && npm cache clean --force
 
-COPY server.js ./
-COPY public ./public
+COPY vite.config.js ./
+COPY src ./src
 
-FROM --platform=$TARGETPLATFORM gcr.io/distroless/nodejs20-debian12 AS runtime
+RUN npm run build
+
+FROM gcr.io/distroless/nodejs20-debian12 AS runtime
 
 WORKDIR /app
 ENV NODE_ENV=production
 
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/server.js ./server.js
-COPY --from=build /app/public ./public
-COPY healthcheck.js ./healthcheck.js
+COPY --from=build /app/dist ./dist
+COPY server.js ./server.js
 
 EXPOSE 3000
 
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD ["/usr/bin/node", "/app/healthcheck.js"]
-
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD ["node","-e","require('http').get('http://127.0.0.1:3000/health', res => { if (res.statusCode !== 200) process.exit(1); }).on('error', () => process.exit(1));"]
 CMD ["/app/server.js"]
