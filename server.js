@@ -197,13 +197,13 @@ const server = http.createServer((req, res) => {
   const idMatch = pathname.match(/^\/api\/services\/(\d+)$/);
   if (idMatch) {
     const id = parseInt(idMatch[1]);
-    if (method === 'GET') {
-
     if (isNaN(id)) {
-        return res.status(400).json({ error: 'Invalid service ID' });
+      sendJson(res, { error: 'Invalid service ID' }, 400);
+      return;
     }
 
-    const services = readServices();
+    if (method === 'GET') {
+      const services = readServices();
       const service = services.find(s => s.id === id);
       if (!service) {
         sendJson(res, { error: 'Service not found' }, 404);
@@ -216,12 +216,7 @@ const server = http.createServer((req, res) => {
           sendJson(res, { error: 'Invalid JSON' }, 400);
           return;
         }
-
-    if (isNaN(id)) {
-        return res.status(400).json({ error: 'Invalid service ID' });
-    }
-
-    const { name, category, url: serviceUrl, icon } = data;
+        const { name, category, url: serviceUrl, icon } = data;
         if (!name || !serviceUrl) {
           sendJson(res, { error: 'Name and URL are required' }, 400);
           return;
@@ -246,12 +241,7 @@ const server = http.createServer((req, res) => {
         }
       });
     } else if (method === 'DELETE') {
-
-    if (isNaN(id)) {
-        return res.status(400).json({ error: 'Invalid service ID' });
-    }
-
-    const services = readServices();
+      const services = readServices();
       const filtered = services.filter(s => s.id !== id);
       if (filtered.length === services.length) {
         sendJson(res, { error: 'Service not found' }, 404);
