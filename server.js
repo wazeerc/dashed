@@ -122,8 +122,20 @@ function serveFile(res, filePath, acceptEncoding) {
   }
 
   // Not found
-  res.writeHead(404, { 'Content-Type': 'application/json' });
-  res.end(JSON.stringify({ error: 'Not found' }));
+  const notFoundMime = getMimeType(filePath);
+  if (notFoundMime.startsWith('text/html')) {
+    res.writeHead(404, { 'Content-Type': notFoundMime });
+    res.end(
+      '<!DOCTYPE html><html><head><meta charset="utf-8"><title>404 Not Found</title></head>' +
+      '<body><h1>404 Not Found</h1><p>The requested resource was not found on this server.</p></body></html>'
+    );
+  } else if (notFoundMime === 'application/json') {
+    res.writeHead(404, { 'Content-Type': notFoundMime });
+    res.end(JSON.stringify({ error: 'Not found' }));
+  } else {
+    res.writeHead(404, { 'Content-Type': notFoundMime });
+    res.end('Not found');
+  }
 }
 
 ensureDataFile();
