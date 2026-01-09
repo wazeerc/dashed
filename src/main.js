@@ -46,14 +46,13 @@ async function checkServiceStatus(url) {
 
         const response = await fetch(url, {
             method: 'HEAD',
-            mode: 'no-cors',
             signal: controller.signal,
             cache: 'no-cache'
         });
 
         clearTimeout(timeoutId);
 
-        return true;
+        return response && response.ok;
     } catch (error) {
         return false;
     }
