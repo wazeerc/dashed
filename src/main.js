@@ -44,7 +44,7 @@ async function checkServiceStatus(url) {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-        const response = await fetch(url, {
+        await fetch(url, {
             method: 'HEAD',
             mode: 'no-cors',
             signal: controller.signal,
