@@ -44,7 +44,7 @@ async function checkServiceStatus(url) {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-        const response = await fetch(url, {
+        await fetch(url, {
             method: 'HEAD',
             signal: controller.signal,
             cache: 'no-cache'
@@ -117,16 +117,33 @@ function createCard(service) {
     cardsContainer.appendChild(card);
 
     const statusIndicator = card.querySelector('.card-status');
-    checkServiceStatus(service.url).then(isOnline => {
-        statusIndicator.classList.remove('checking');
-        if (isOnline) {
-            statusIndicator.classList.add('online');
-            statusIndicator.setAttribute('aria-label', 'Service is online');
-        } else {
+    checkServiceStatus(service.url)
+        .then(isOnline => {
+            // The card (and thus the status indicator) may have been removed
+            // while the status check was in progress. Guard against that.
+            if (!statusIndicator || !document.body.contains(statusIndicator)) {
+                return;
+            }
+
+            statusIndicator.classList.remove('checking');
+            if (isOnline) {
+                statusIndicator.classList.add('online');
+                statusIndicator.setAttribute('aria-label', 'Service is online');
+            } else {
+                statusIndicator.classList.add('offline');
+                statusIndicator.setAttribute('aria-label', 'Service is offline');
+            }
+        })
+        .catch(err => {
+            console.error('Failed to check service status:', err);
+            // If the indicator still exists, reflect the failure in the UI.
+            if (!statusIndicator || !document.body.contains(statusIndicator)) {
+                return;
+            }
+            statusIndicator.classList.remove('checking');
             statusIndicator.classList.add('offline');
-            statusIndicator.setAttribute('aria-label', 'Service is offline');
-        }
-    });
+            statusIndicator.setAttribute('aria-label', 'Service status could not be determined');
+        });
 }
 
 async function editService(id) {

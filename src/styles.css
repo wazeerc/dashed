@@ -107,7 +107,7 @@ main {
   border: 2px solid var(--border);
   display: inline-block;
   transition: background-color 0.3s ease;
-  box-shadow: 2px 2px 0px 0px rgb(0, 0, 0);
+  box-shadow: var(--shadow);
 }
 
 .card-status.online {
