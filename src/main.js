@@ -39,6 +39,26 @@ function updateDateTime() {
     timeEl.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 }
 
+async function checkServiceStatus(url) {
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+        const response = await fetch(url, {
+            method: 'HEAD',
+            mode: 'no-cors',
+            signal: controller.signal,
+            cache: 'no-cache'
+        });
+
+        clearTimeout(timeoutId);
+
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
 async function loadCards() {
     try {
         const response = await fetch(API_URL);
@@ -71,7 +91,10 @@ function createCard(service) {
         <span class="card-icon">${service.icon || '📦'}</span>
         <div class="card-name">${escapeHtml(service.name)}</div>
         ${service.category ? `<div class="card-category">${escapeHtml(service.category)}</div>` : ''}
-        <div class="card-url">${escapeHtml(service.url)}</div>
+        <div class="card-url-wrapper">
+            <div class="card-url">${escapeHtml(service.url)}</div>
+            <span class="card-status checking" aria-label="Service status"></span>
+        </div>
         <button class="card-delete" data-id="${service.id}" aria-label="Delete service">❌</button>
         <button class="card-edit" data-id="${service.id}" aria-label="Edit service">✏️</button>
     `;
@@ -93,6 +116,18 @@ function createCard(service) {
     });
 
     cardsContainer.appendChild(card);
+
+    const statusIndicator = card.querySelector('.card-status');
+    checkServiceStatus(service.url).then(isOnline => {
+        statusIndicator.classList.remove('checking');
+        if (isOnline) {
+            statusIndicator.classList.add('online');
+            statusIndicator.setAttribute('aria-label', 'Service is online');
+        } else {
+            statusIndicator.classList.add('offline');
+            statusIndicator.setAttribute('aria-label', 'Service is offline');
+        }
+    });
 }
 
 async function editService(id) {
