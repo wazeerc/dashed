@@ -39,6 +39,25 @@ function updateDateTime() {
     timeEl.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 }
 
+async function checkServiceStatus(url) {
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+        await fetch(url, {
+            method: 'HEAD',
+            signal: controller.signal,
+            cache: 'no-cache'
+        });
+
+        clearTimeout(timeoutId);
+
+        return response && response.ok;
+    } catch (error) {
+        return false;
+    }
+}
+
 async function loadCards() {
     try {
         const response = await fetch(API_URL);
@@ -71,7 +90,10 @@ function createCard(service) {
         <span class="card-icon">${service.icon || '📦'}</span>
         <div class="card-name">${escapeHtml(service.name)}</div>
         ${service.category ? `<div class="card-category">${escapeHtml(service.category)}</div>` : ''}
-        <div class="card-url">${escapeHtml(service.url)}</div>
+        <div class="card-url-wrapper">
+            <div class="card-url">${escapeHtml(service.url)}</div>
+            <span class="card-status checking" aria-label="Service status"></span>
+        </div>
         <button class="card-delete" data-id="${service.id}" aria-label="Delete service">❌</button>
         <button class="card-edit" data-id="${service.id}" aria-label="Edit service">✏️</button>
     `;
@@ -93,6 +115,35 @@ function createCard(service) {
     });
 
     cardsContainer.appendChild(card);
+
+    const statusIndicator = card.querySelector('.card-status');
+    checkServiceStatus(service.url)
+        .then(isOnline => {
+            // The card (and thus the status indicator) may have been removed
+            // while the status check was in progress. Guard against that.
+            if (!statusIndicator || !document.body.contains(statusIndicator)) {
+                return;
+            }
+
+            statusIndicator.classList.remove('checking');
+            if (isOnline) {
+                statusIndicator.classList.add('online');
+                statusIndicator.setAttribute('aria-label', 'Service is online');
+            } else {
+                statusIndicator.classList.add('offline');
+                statusIndicator.setAttribute('aria-label', 'Service is offline');
+            }
+        })
+        .catch(err => {
+            console.error('Failed to check service status:', err);
+            // If the indicator still exists, reflect the failure in the UI.
+            if (!statusIndicator || !document.body.contains(statusIndicator)) {
+                return;
+            }
+            statusIndicator.classList.remove('checking');
+            statusIndicator.classList.add('offline');
+            statusIndicator.setAttribute('aria-label', 'Service status could not be determined');
+        });
 }
 
 async function editService(id) {

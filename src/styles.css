@@ -96,9 +96,30 @@ main {
 
 .card-icon {
   font-size: 2.5rem;
-  margin-bottom: 1rem;
   display: block;
   line-height: 1;
+  margin-bottom: 1rem;
+}
+
+.card-status {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--border);
+  display: inline-block;
+  transition: background-color 0.3s ease;
+  box-shadow: var(--shadow);
+}
+
+.card-status.online {
+  background-color: #00ff00;
+}
+
+.card-status.offline {
+  background-color: #ff0000;
+}
+
+.card-status.checking {
+  background-color: #ffff00;
 }
 
 .card-name {
@@ -117,11 +138,18 @@ main {
   text-transform: uppercase;
 }
 
+.card-url-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .card-url {
   font-size: 0.8125rem;
   color: var(--accent);
   word-break: break-all;
   font-weight: 700;
+  flex: 1;
 }
 
 .card-delete {
